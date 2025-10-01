@@ -1,31 +1,35 @@
 import express from "express";
-import taskRoute from "./routes/taskRouters.js";
+import taskRoute from "./routes/tasksRouters.js";
 import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
-import cros from "cors";
+import cors from "cors";
+import path from "path";
+
 dotenv.config();
+
+const PORT = process.env.PORT || 5001;
+const __dirname = path.resolve();
+
 const app = express();
 
-// middleware đọc JSON body
-
+// middlewares
 app.use(express.json());
-//cho phép tất cả
-app.use(cros());
-//chỉ  cho một vào local
-// app,use(cros({origin: ["",""]}))
-// // Kết nối DB
-// connectDB();
-// MIDDLEWARE
 
-// Routes
+if (process.env.NODE_ENV !== "production") {
+  app.use(cors({ origin: "http://localhost:5173" }));
+}
+
 app.use("/api/tasks", taskRoute);
-app.get("/", (req, res) => {
-  res.send("Server đang chạy OK!");
-});
 
-// Server lắng nghe
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  });
+}
+
 connectDB().then(() => {
-  const PORT = process.env.PORT || 5001;
   app.listen(PORT, () => {
     console.log(`server bắt đầu trên cổng ${PORT}`);
   });

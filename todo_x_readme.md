@@ -90,11 +90,6 @@ ToDoX/
 
 ## 🔗 Liên kết
 
-- [Demo trực tuyến](#) (nếu có)
-- [Portfolio của tôi](#) (nếu muốn thêm)
 
----
 
-## ⚡ License
 
-This project is licensed under the MIT License.
